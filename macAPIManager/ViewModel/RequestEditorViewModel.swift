@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import AppKit
+
 @MainActor
 final class RequestEditorViewModel: ObservableObject {
     @Published var request = HTTPRequest()
@@ -49,4 +51,24 @@ final class RequestEditorViewModel: ObservableObject {
     func cancel() {
         task?.cancel()
     }
+
+    // MARK: - Save JSON
+    func saveJSON() {
+        guard let data = response?.body else { return }
+
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [.json]
+        panel.nameFieldStringValue = "response.json"
+
+        panel.begin { result in
+            if result == .OK, let url = panel.url {
+                do {
+                    try data.write(to: url)
+                } catch {
+                    print("Failed to save JSON:", error)
+                }
+            }
+        }
+    }
 }
+

@@ -20,7 +20,7 @@ struct ContentView: View {
                 }
                 .frame(width: 190)
 
-                TextField("https://api.example.com/path", text: $viewModel.request.url)
+                TextField("https://www.boredapi.com/api/activity", text: $viewModel.request.url)
                     .textFieldStyle(.roundedBorder)
 
                 Button(viewModel.isSending ? "Cancel" : "Send") {
@@ -31,6 +31,10 @@ struct ContentView: View {
                     }
                 }
                 .keyboardShortcut(.return, modifiers: [.command])
+                Button("Save JSON") {
+                    viewModel.saveJSON()
+                }
+                .disabled(viewModel.response == nil)
             }
 
             // Headers + Body editor (split view)
@@ -41,6 +45,7 @@ struct ContentView: View {
             .frame(minHeight: 200)
 
             Divider()
+           
 
             ResponseView(response: viewModel.response, errorMessage: viewModel.errorMessage)
                 .frame(minHeight: 200)
